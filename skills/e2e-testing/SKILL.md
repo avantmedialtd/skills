@@ -10,11 +10,11 @@ Playwright-based E2E and visual regression testing, run exclusively inside Docke
 ## Commands
 
 ```bash
-af e2e                                  # Run all tests (--max-failures=1 by default)
-af e2e -- --grep "test name"            # Run specific test by name
-af e2e -- tests/Feature.spec.ts         # Run specific file
-af e2e -- --update-snapshots            # Update all visual baselines
-af e2e -- --grep "page" --update-snapshots  # Update specific baseline
+af e2e                                              # Run all tests (--max-failures=1 by default)
+af e2e npm run e2e -- --grep "test name"            # Run specific test by name
+af e2e npm run e2e -- tests/Feature.spec.ts         # Run specific file
+af e2e npm run e2e -- --update-snapshots            # Update all visual baselines
+af e2e npm run e2e -- --grep "page" --update-snapshots  # Update specific baseline
 ```
 
 **Never** run Playwright directly outside Docker.
