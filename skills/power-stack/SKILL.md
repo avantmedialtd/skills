@@ -39,7 +39,26 @@ TypeScript project references: root `tsconfig.json` uses `"files": []` + `"refer
 
 ---
 
-## 3. Backend (`apps/api`)
+## 3. Environment Variables
+
+Managed via `.env` at the project root (with `.env.example` checked in). Backend reads via `process.env`, frontend via Vite's `VITE_` prefix.
+
+| Variable              | Used by  | Purpose                         | Default              |
+| --------------------- | -------- | ------------------------------- | -------------------- |
+| `POSTGRES_HOST`       | API      | Database host                   | `localhost`          |
+| `POSTGRES_PORT`       | API      | Database port                   | `16002`              |
+| `POSTGRES_USER`       | API      | Database user                   | `postgres`           |
+| `POSTGRES_PASSWORD`   | API      | Database password               | `postgres`           |
+| `POSTGRES_DB`         | API      | Database name                   | `avant_id`           |
+| `API_PORT`            | API      | HTTP listen port                | `16000`              |
+| `JWT_SECRET`          | API      | Signing key for JWTs            | dev fallback         |
+| `WEB_URL`             | API      | Frontend origin (CORS/redirects)| `http://localhost:16001` |
+| `NODE_ENV`            | API      | Environment mode                | `development`        |
+| `VITE_API_URL`        | Web      | API base URL for frontend       | `http://localhost:16000` |
+
+---
+
+## 4. Backend (`apps/api`)
 
 ### Framework
 
@@ -101,7 +120,7 @@ Elysia `.derive()` extracts Bearer token from `Authorization` header, verifies J
 
 ---
 
-## 4. Frontend (`apps/web`)
+## 5. Frontend (`apps/web`)
 
 ### Stack
 
@@ -148,13 +167,13 @@ Vite builds static files. Served by **nginx:alpine** with a custom `nginx.conf`.
 
 ---
 
-## 5. Shared Package (`packages/shared`)
+## 6. Shared Package (`packages/shared`)
 
 Pure TypeScript, no runtime dependencies. Exports via subpath: `.` (root), `./types`, `./utils`. Contains shared types, interfaces, and utility functions used by both backend and frontend. Built with `tsc` to `dist/`.
 
 ---
 
-## 6. Testing
+## 7. Testing
 
 ### Unit Tests
 
@@ -172,7 +191,7 @@ Runs in Docker Compose with `--profile testing`: spins up PostgreSQL, API, web (
 
 ---
 
-## 7. Docker
+## 8. Docker
 
 ### API Container
 
@@ -200,7 +219,7 @@ Health checks on all services. E2E waits for postgres + api + web to be healthy 
 
 ---
 
-## 8. CI/CD
+## 9. CI/CD
 
 **Jenkins** pipeline (Groovy `Jenkinsfile`):
 
@@ -212,7 +231,7 @@ Health checks on all services. E2E waits for postgres + api + web to be healthy 
 
 ---
 
-## 9. Code Quality
+## 10. Code Quality
 
 | Tool            | Config                  | Purpose                |
 | --------------- | ----------------------- | ---------------------- |
@@ -222,7 +241,7 @@ Health checks on all services. E2E waits for postgres + api + web to be healthy 
 
 ---
 
-## 10. OpenSpec
+## 11. OpenSpec
 
 Spec-driven change management. Initialize with `bunx openspec init`. Structure:
 
@@ -238,7 +257,7 @@ Each feature has a `spec.md` describing its current state. Changes go through a 
 
 ---
 
-## 11. Key Dependencies Summary
+## 12. Key Dependencies Summary
 
 ### Backend
 
