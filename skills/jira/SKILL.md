@@ -14,6 +14,10 @@ Add the following environment variables to your project's `.env` file:
 - `JIRA_EMAIL` — Your Atlassian account email
 - `JIRA_API_TOKEN` — API token from https://id.atlassian.com/manage-profile/security/api-tokens
 
+## Project Defaults
+
+If the project instructions specify a default Jira project key (e.g., `Jira project: PROJ`), use it as the default for `--project`, `list`, `types`, and JQL queries. Explicit user input always overrides the default.
+
 ## Quick Reference
 
 Run `af jira --help` for all options.
