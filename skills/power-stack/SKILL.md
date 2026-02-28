@@ -95,7 +95,31 @@ Elysia `.derive()` extracts Bearer token from `Authorization` header, verifies J
 
 - **PostgreSQL** 17 via **TypeORM** 0.3 with `DataSource` config
 - Connection from env vars: `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
-- `synchronize: false` always, schema changes via migrations only (`src/db/migrations/*.ts`)
+- `synchronize: false` always, schema changes via migrations only (`packages/db/src/db/migrations/*.ts`)
+- Run migrations: `bun run migrate` (calls `packages/db/src/db/migrate.ts`)
+- Generate migrations: `bun run generate-migration` (uses TypeORM CLI against `packages/db/src/data-source.ts`)
+
+`packages/db/src/db/migrate.ts`:
+
+```typescript
+import 'reflect-metadata';
+import { AppDataSource } from './data-source';
+
+async function runMigrations() {
+    try {
+        await AppDataSource.initialize();
+        console.log('Running migrations...');
+        await AppDataSource.runMigrations();
+        console.log('Migrations completed successfully');
+        await AppDataSource.destroy();
+    } catch (error) {
+        console.error('Migration failed:', error);
+        process.exit(1);
+    }
+}
+
+runMigrations();
+```
 - Entities: User (and domain-specific entities as needed)
 
 ### Entity Conventions
