@@ -1,6 +1,6 @@
 ---
 name: jira
-description: Manage Jira issues from the command line. Use when working with Jira issues, creating tasks, updating status, assigning work, linking issues, managing versions, or searching for issues.
+description: Manage Jira issues from the command line. Use when working with Jira issues, creating tasks, updating status, assigning work, linking issues, managing versions, setting or reading custom fields (Story Points, Sprint, Severity, etc.), or searching for issues.
 ---
 
 # Jira CLI
@@ -9,10 +9,11 @@ Command-line tool for managing Jira issues via `af jira`.
 
 ## Setup
 
-Add the following environment variables to your project's `.env` file:
-- `JIRA_BASE_URL` — Your Jira instance URL (e.g., `https://company.atlassian.net`)
-- `JIRA_EMAIL` — Your Atlassian account email
-- `JIRA_API_TOKEN` — API token from https://id.atlassian.com/manage-profile/security/api-tokens
+Add the following environment variables to your project's `.env` file (preferred names first; legacy `JIRA_*` names are still accepted and fall back to these when unset):
+
+- `ATLASSIAN_BASE_URL` — Your Atlassian instance URL (e.g., `https://company.atlassian.net`)
+- `ATLASSIAN_EMAIL` — Your Atlassian account email
+- `ATLASSIAN_API_TOKEN` — API token from https://id.atlassian.com/manage-profile/security/api-tokens
 
 ## Project Defaults
 
@@ -24,11 +25,12 @@ Run `af jira --help` for all options.
 
 ### Read Operations
 
-- `af jira get <issue-key>` — Get issue details
-- `af jira list <project> [--limit N]` — List project issues
-- `af jira search "<jql>"` — Search with JQL
+- `af jira get <issue-key>` — Get issue details (renders a "Custom Fields" section when any are set)
+- `af jira list <project> [--limit N] [--show-field a,b,c]` — List project issues; `--show-field` adds custom-field columns
+- `af jira search "<jql>" [--show-field a,b,c]` — Search with JQL
 - `af jira projects` — List projects
 - `af jira types <project>` — List issue types
+- `af jira fields [--project <key> --type <name>] [--refresh] [--verbose]` — List custom fields; with `--project`/`--type` marks required fields and shows allowed values
 - `af jira transitions <issue-key>` — List available transitions
 - `af jira comment <issue-key>` — List comments
 - `af jira remote-link <issue-key>` — List remote links
@@ -37,8 +39,8 @@ Run `af jira --help` for all options.
 
 ### Write Operations
 
-- `af jira create --project <key> --type <type> --summary "<text>" [--description "<text>"] [--priority <name>] [--labels a,b,c] [--parent <key>] [--estimate <time>] [--fix-version <v1,v2>] [--affected-version <v>]`
-- `af jira update <issue-key> [--summary "<text>"] [--description "<text>"] [--priority <name>] [--labels a,b,c] [--estimate <time>] [--remaining <time>] [--fix-version <v1,v2>] [--affected-version <v>]`
+- `af jira create --project <key> --type <type> --summary "<text>" [--description "<text>"] [--priority <name>] [--labels a,b,c] [--parent <key>] [--estimate <time>] [--fix-version <v1,v2>] [--affected-version <v>] [--field name=value]... [--field-json '<json>']`
+- `af jira update <issue-key> [--summary "<text>"] [--description "<text>"] [--priority <name>] [--labels a,b,c] [--estimate <time>] [--remaining <time>] [--fix-version <v1,v2>] [--affected-version <v>] [--field name=value]... [--field-json '<json>']`
 - `af jira transition <issue-key> --to "<status>"`
 - `af jira assign <issue-key> --to <email>` (use `--to none` to unassign)
 - `af jira comment <issue-key> --add "<text>"`
@@ -153,6 +155,65 @@ af jira version-update 12345 --released
 af jira update PROJ-123 --estimate "8h" --remaining "2h"
 ```
 
+### Custom fields
+
+Custom fields are instance-specific (Story Points, Sprint, Severity, and any custom selectors configured by the Jira admin). Reference them by alias (from `af.json`), by display name (case-insensitive, must be unambiguous), or by raw `customfield_<digits>` id — in that precedence order.
+
+```bash
+# Discover fields — lists every custom field in the instance
+af jira fields
+
+# Project-and-type scope marks required fields with ✓ and lists allowed values
+af jira fields --project PROJ --type Story
+
+# Bust the cache (instance catalog is cached 24h, createmeta 1h)
+af jira fields --refresh
+
+# Create with required custom fields
+af jira create --project PROJ --type Story --summary "Redesign login" \
+  --field storyPoints=5 --field severity=High
+
+# Update a custom field
+af jira update PROJ-123 --field storyPoints=8
+
+# Clear a custom field (empty value after `=`)
+af jira update PROJ-123 --field severity=
+
+# JSON escape hatch for complex shapes (cascading selects, raw overrides)
+af jira create --project PROJ --type Story --summary "X" \
+  --field-json '{"customfield_10050":{"value":"A","child":{"value":"A1"}}}'
+
+# Show custom fields as extra columns when listing
+af jira list PROJ --show-field storyPoints,severity
+```
+
+Encoding rules (applied per `--field`):
+
+- `number` → numeric; `string`/`date`/`datetime` → raw string
+- `option` → `{value: "..."}`; multi-select → array of those
+- `user` → resolves email/name to `{accountId}` via `findUser`; multi-user splits on commas
+- `version` → `{name: "..."}`; multi-version array
+- sprint → numeric sprint ID only
+- Epic Link → issue key string
+- Empty value after `=` → `null` (clears the field)
+- Unknown schema types pass through raw and warn to stderr — reach for `--field-json` if that doesn't encode correctly
+
+Optional aliases live in `af.json` and make commands more ergonomic:
+
+```json
+{
+    "jira": {
+        "customFields": {
+            "storyPoints": { "id": "customfield_10016" },
+            "sprint":      { "id": "customfield_10020", "type": "sprint" },
+            "severity":    { "id": "customfield_10099" }
+        }
+    }
+}
+```
+
+The CLI does **not** pre-validate required fields on create. Run `af jira fields --project PROJ --type <type>` first to see what Jira will require; otherwise the error message from Jira's 400 surfaces unchanged.
+
 ### Attach files to an issue
 
 ```bash
@@ -186,11 +247,12 @@ af jira search "priority = Highest AND status != Done"
 
 ## Tips
 
-- **Discover valid values first**: Run `af jira transitions <key>` before transitioning, `af jira types <project>` before creating
+- **Discover valid values first**: Run `af jira transitions <key>` before transitioning, `af jira types <project>` before creating, `af jira fields --project <key> --type <type>` before creating an issue that requires custom fields
 - **Use `--json` for scripting**: Pipe output to `jq` for automation
 - **Quote JQL queries**: Always wrap JQL in double quotes to handle spaces
 - **Time format**: Use `"2h"`, `"1d"`, `"30m"` for estimates
-- **Version flags**: Pass empty `--fix-version ""` to clear versions on an issue
+- **Clearing flags**: `--fix-version ""` clears versions; `--field name=` clears a custom field
+- **Alias custom fields in `af.json`** for nicer `--field` ergonomics; otherwise use the display name (case-insensitive, must be unambiguous) or the raw `customfield_<digits>` id
 
 ## Error Handling
 
