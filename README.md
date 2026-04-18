@@ -37,9 +37,17 @@ cp -r skills/typescript-react-standards ~/.claude/skills/
 
 ## Available Skills
 
-| Skill                                                            | Description                                                                           |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| [typescript-react-standards](skills/typescript-react-standards/) | Opinionated TypeScript and React conventions, project structure, and testing approach |
+| Skill                                                            | Description                                                                                                                    |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [commit-work](skills/commit-work/)                               | Commit all changes with the OpenSpec proposal title and ID as a git trailer; auto-archives first                               |
+| [complete-work](skills/complete-work/)                           | Archive an OpenSpec change, commit with trailers, transition the Jira issue to Done, push, and verify CI                       |
+| [confluence](skills/confluence/)                                 | Manage Confluence pages, spaces, comments, labels, attachments, and wiki search from the command line                          |
+| [e2e-testing](skills/e2e-testing/)                               | E2E and visual regression testing with Playwright — test commands, patterns, and debugging tips                                |
+| [jira](skills/jira/)                                             | Manage Jira issues, custom fields, links, and versions from the command line                                                   |
+| [power-stack](skills/power-stack/)                               | Bun / Elysia / React / MUI monorepo blueprint — tech stack, conventions, and wiring patterns                                   |
+| [start-work](skills/start-work/)                                 | Assign a Jira issue to yourself and convert it into an OpenSpec proposal; hands off to the OPSX workflow                       |
+| [typescript-react-standards](skills/typescript-react-standards/) | Opinionated TypeScript and React conventions, project structure, and testing approach                                          |
+| [work-auto](skills/work-auto/)                                   | Autonomously pick up a Jira issue and complete it end-to-end — plan, implement, test, verify, archive, commit, push, verify CI |
 
 ## Skill Format
 
