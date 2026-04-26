@@ -1,21 +1,21 @@
 ---
-name: work-auto
-description: Autonomously pick up a Jira issue and complete it end-to-end — plan, implement, test, verify, archive, commit, push, and confirm CI passes. Use when the user says "work auto", "pick up the next ticket and finish it", "autonomous mode", or otherwise wants the full development cycle run without intermediate confirmations. Only pauses at the very start to confirm the issue selection.
+name: autopilot
+description: Autonomously pick up a Jira issue and complete it end-to-end — plan, implement, test, verify, archive, commit, push, and confirm CI passes. Use when the user says "autopilot", "pick up the next ticket and finish it", "autonomous mode", or otherwise wants the full development cycle run without intermediate confirmations. Only pauses at the very start to confirm the issue selection.
 ---
 
-# Auto Work
+# Autopilot
 
 Run the full development cycle on a Jira issue without intermediate confirmations: pick up, plan, implement, test, verify, archive, commit, push, and check CI.
 
 ## When to use
 
 - The user wants an entire issue handled end-to-end without micromanaging each phase.
-- The user explicitly invokes `/work-auto` or asks for "autonomous" / "hands-off" work.
+- The user explicitly invokes `/autopilot` or asks for "autonomous" / "hands-off" work.
 - The task is well-scoped enough that reasonable defaults at each decision point are acceptable.
 
 Examples:
-- "work auto" — takes the topmost backlog issue and runs the full cycle.
-- "work auto PROJ-123" — runs the full cycle on a specific issue.
+- "autopilot" — takes the topmost backlog issue and runs the full cycle.
+- "autopilot PROJ-123" — runs the full cycle on a specific issue.
 
 ## Steps
 

@@ -47,7 +47,7 @@ cp -r skills/typescript-react-standards ~/.claude/skills/
 | [power-stack](skills/power-stack/)                               | Bun / Elysia / React / MUI monorepo blueprint — tech stack, conventions, and wiring patterns                                   |
 | [start-work](skills/start-work/)                                 | Assign a Jira issue to yourself and convert it into an OpenSpec proposal; hands off to the OPSX workflow                       |
 | [typescript-react-standards](skills/typescript-react-standards/) | Opinionated TypeScript and React conventions, project structure, and testing approach                                          |
-| [work-auto](skills/work-auto/)                                   | Autonomously pick up a Jira issue and complete it end-to-end — plan, implement, test, verify, archive, commit, push, verify CI |
+| [autopilot](skills/autopilot/)                                   | Autonomously pick up a Jira issue and complete it end-to-end — plan, implement, test, verify, archive, commit, push, verify CI |
 
 ## Skill Format
 
