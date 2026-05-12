@@ -48,6 +48,8 @@ cp -r skills/typescript-react-standards ~/.claude/skills/
 | [start-work](skills/start-work/)                                 | Assign a Jira issue to yourself and convert it into an OpenSpec proposal; hands off to the OPSX workflow                       |
 | [typescript-react-standards](skills/typescript-react-standards/) | Opinionated TypeScript and React conventions, project structure, and testing approach                                          |
 | [autopilot](skills/autopilot/)                                   | Autonomously pick up a Jira issue and complete it end-to-end — plan, implement, test, verify, archive, commit, push, verify CI |
+| [bitbucket](skills/bitbucket/)                                   | Manage Bitbucket Cloud pull requests, comments, tasks, and pipelines from the command line                                     |
+| [sonar](skills/sonar/)                                           | Inspect SonarQube quality gates, issues, and measures for a Bitbucket PR or main branch                                        |
 
 ## Skill Format
 
